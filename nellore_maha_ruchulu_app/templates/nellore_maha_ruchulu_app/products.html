@@ -1,0 +1,139 @@
+{% extends "nellore_maha_ruchulu_app/base.html" %}
+{% load static %}
+
+{% block title %}Products | Nellore Maharuchulu{% endblock %}
+
+{% block content %}
+
+  <section class="products-hero">
+    <div class="container products-hero-inner">
+      {# DYNAMIC TITLE: Uses model field with a default fallback #}
+      <h1>{{ products_page.hero_title|default:"Explore Our Products" }}</h1>
+      
+      {# DYNAMIC SUBTITLE: Uses model field with a default fallback #}
+      <p>{{ products_page.hero_subtitle|default:"Discover everything we make with care, love, and authentic Andhra taste." }}</p>
+    </div>
+  </section>
+
+  <section class="products-page">
+  <div class="container products-layout"
+       data-initial-category="{{ initial_category_slug|default:'all' }}">
+
+      <aside class="products-sidebar">
+        {# DYNAMIC SIDEBAR HEADING #}
+        <h2>{{ products_page.sidebar_heading|default:"Categories" }}</h2>
+        <div class="sidebar-divider"></div>
+<ul class="category-list" id="categoryFilter" role="list">
+  {% url 'products' as products_url %}
+
+  <li class="{% if not initial_category_slug or initial_category_slug == 'all' %}active{% endif %}">
+    <a href="{{ products_url }}" role="button" tabindex="0">All Products</a>
+  </li>
+
+  {# Dynamic categories from DB #}
+  {% for category in categories %}
+    {% with category_slug=category.name|slugify %}
+    <li class="{% if initial_category_slug == category_slug %}active{% endif %}">
+      <a href="{{ products_url }}?category={{ category_slug }}" role="button" tabindex="0">
+        {{ category.name }}
+      </a>
+    </li>
+    {% endwith %}
+  {% endfor %}
+</ul>
+      </aside>
+
+      <ul class="products-grid">
+        {% for product in products %}
+          <li class="product-card"
+              data-category="{{ product.category.name|slugify }}">
+
+            <div class="product-img-wrap">
+              {% if product.image %}
+                <a href="#"
+                   data-bs-toggle="modal"
+                   data-bs-target="#productModal{{ product.id }}"
+                   style="display:block; text-decoration:none; cursor:pointer;">
+                  <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                </a>
+              {% else %}
+                <img src="{% static 'nellore_maha_ruchulu_app/images/Rectangle 4.png' %}"
+                     alt="{{ product.name }}">
+              {% endif %}
+            </div>
+
+            <div class="title-price-row">
+              <h3 class="product-title">{{ product.name }}</h3>
+              <p class="price">₹{{ product.price_per_kg }}<span class="price-unit">/kg</span></p>
+            </div>
+
+            <a href="https://wa.me/{{ product.whatsapp_number|default:'9618500442' }}?text={{ product.get_whatsapp_message|urlencode }}"
+               class="btn whatsapp-btn"
+               target="_blank"
+               rel="noopener">
+              <img src="{% static 'nellore_maha_ruchulu_app/images/whatsapp.png' %}"
+                   class="wa-icon" alt="WhatsApp" />
+              Whatsapp to order
+            </a>
+
+          </li>
+        {% empty %}
+          <li>No products added yet. Please add products in Django admin.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  {# ==== PRODUCT POPUPS (one modal per product) ==== #}
+  {% for product in products %}
+    <div class="modal fade product-modal-v2"
+         id="productModal{{ product.id }}"
+         tabindex="-1"
+         aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <button type="button"
+                  class="btn-close modal-close-btn"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+
+          <div class="product-modal-card">
+
+            <div class="product-modal-image-wrap">
+              {% if product.image %}
+                <img src="{{ product.image.url }}"
+                     alt="{{ product.name }}"
+                     class="product-modal-image" />
+              {% else %}
+                <img src="{% static 'nellore_maha_ruchulu_app/images/Rectangle 4.png' %}"
+                     alt="{{ product.name }}"
+                     class="product-modal-image" />
+              {% endif %}
+            </div>
+
+            <p class="product-modal-desc">
+              Delicious homemade {{ product.name }} prepared with authentic Nellore style.
+            </p>
+
+            <div class="product-modal-bottom">
+              <p class="product-modal-price">
+                ₹{{ product.price_per_kg }}<span class="price-unit">/kg</span>
+              </p>
+              <a href="https://wa.me/{{ product.whatsapp_number|default:'9618500442' }}?text={{ product.get_whatsapp_message|urlencode }}"
+                 class="btn product-modal-cta"
+                 target="_blank"
+                 rel="noopener">
+                <img src="{% static 'nellore_maha_ruchulu_app/images/whatsapp.png' %}"
+                     class="wa-icon" alt="WhatsApp" />
+                Whatsapp to order
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+
+{% endblock %}

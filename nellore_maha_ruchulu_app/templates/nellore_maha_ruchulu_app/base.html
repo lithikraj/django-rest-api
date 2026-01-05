@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}{{ SITE_SETTINGS.site_name|default:"Nellore Maharuchulu" }}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet" />
+
+    <link rel="stylesheet" href="{% static 'nellore_maha_ruchulu_app/css/styles.css' %}" />
+</head>
+
+<body>
+
+    <header class="bg-white shadow-sm sticky-top">
+        <nav class="navbar navbar-expand-lg navbar-light custom-navbar">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                    {% if SITE_SETTINGS.logo_image %}
+                        <img src="{{ SITE_SETTINGS.logo_image.url }}"
+                            alt="{{ SITE_SETTINGS.site_name }} logo"
+                            class="logo-img me-2" />
+                    {% else %}
+                        <span class="h4 mb-0 text-primary">{{ SITE_SETTINGS.site_name }}</span>
+                    {% endif %}
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 nav-center">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                                href="{% url 'home' %}">
+                                Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'products' %}active{% endif %}"
+                                href="{% url 'products' %}">
+                                Products
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
+                                href="{% url 'about' %}">
+                                About Us
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}"
+                                href="{% url 'contact' %}">
+                                Contact Us
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="d-none d-lg-flex nav-right">
+                        <img src="https://unpkg.com/heroicons@2.0.18/24/outline/magnifying-glass.svg"
+                            width="20" height="20" alt="Search Icon">
+                        <img src="https://unpkg.com/heroicons@2.0.18/24/outline/phone.svg"
+                            width="20" height="20" alt="Phone Icon">
+                        <span class="ms-2">{% if SITE_SETTINGS.phone_number %}{{ SITE_SETTINGS.phone_number }}{% else %}+91 XXX-XXX-XXXX{% endif %}</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+
+    <footer class="footer" role="contentinfo">
+        <div class="container footer-inner">
+            <div class="footer-col brand-col">
+                {% if SITE_SETTINGS.logo_image %}
+                    <img src="{{ SITE_SETTINGS.logo_image.url }}"
+                        alt="{{ SITE_SETTINGS.site_name }} logo"
+                        class="footer-logo" />
+                {% endif %}
+                <p class="footer-brand-text">
+                    <strong>{{ SITE_SETTINGS.site_name|default:"[Site Name]" }}</strong><br />
+                    Authentic Andhra flavours prepared with love, care, and family tradition.
+                    Homemade spice powders, pickles, sweets and more — straight from Nellore.
+                </p>
+            </div>
+
+            {% for group in FOOTER_GROUPS %}
+                <div class="footer-col">
+                    <h4>{{ group.title }}</h4>
+                    <ul>
+                        {% for link in group.links.all %}
+                            {% with first_char=link.url|slice:":1" %}
+    {% if first_char == "/" %}
+        <li><a href="{{ link.url }}" aria-label="Go to {{ link.text }} page">{{ link.text }}</a></li>
+    {% else %}
+        <li><a href="{% url link.url %}" aria-label="Go to {{ link.text }} page">{{ link.text }}</a></li>
+    {% endif %}
+{% endwith %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+
+            <div class="footer-col contact-col">
+                <h4>Contact Us</h4>
+                <ul>
+                    <li>
+                        <img src="{% static 'nellore_maha_ruchulu_app/images/Frame.png' %}"
+                            alt="Phone" class="list-icon" />
+                        {{ SITE_SETTINGS.phone_number|default:"+91 XXX-XXX-XXXX" }}
+                    </li>
+                    <li>
+                        <img src="{% static 'nellore_maha_ruchulu_app/images/Vector.png' %}"
+                            alt="Email" class="list-icon" />
+                        {{ SITE_SETTINGS.email_address|default:"info@example.com" }}
+                    </li>
+                    <li>
+                        <img src="{% static 'nellore_maha_ruchulu_app/images/Frame (1).png' %}"
+                            alt="location" class="list-icon" />
+                        {{ SITE_SETTINGS.address_line|default:"[Address]" }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>{{ SITE_SETTINGS.copyright_text|default:"All Rights Reserved" }}</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

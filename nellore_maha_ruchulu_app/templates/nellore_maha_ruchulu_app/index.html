@@ -1,0 +1,212 @@
+{% extends "nellore_maha_ruchulu_app/base.html" %}
+{% load static %}
+
+{% block title %}Home | Nellore Maharuchulu{% endblock %}
+
+{% block content %}
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-text">
+        <h1 class="jost">
+          {{ hero_title|default:"Authentic Nellore Flavours, Made with Love" }}
+        </h1>
+
+        <p class="jost">
+          {{ hero_subtitle|default:"Home-crafted powders, pickles, and masalas straight from our kitchen to yours." }}
+        </p>
+<a href="{% url 'products' %}" class="btn primary-btn">
+  Shop Now
+</a>
+
+      </div>
+
+<div class="hero-image-wrap">
+  {% if hero_image %}
+    <img src="{{ hero_image.url }}" alt="{{ hero_title }}" class="hero-image" />
+  {% else %}
+    <img src="{% static 'nellore_maha_ruchulu_app/images/allspices.png' %}" 
+         alt="Assorted spices" 
+         class="hero-image" />
+  {% endif %}
+</div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="categories">
+    <div class="container">
+      <ul class="category-list">
+        {% for category in categories %}
+          <li class="category-card">
+            <div class="cat-img-wrap">
+              {% if category.image %}
+                <img src="{{ category.image.url }}" alt="{{ category.name }}" />
+              {% endif %}
+            </div>
+            <h3>{{ category.name }}</h3>
+
+            {# View More → sends to products page with ?category=<slug> #}
+            <a href="{% url 'products' %}?category={{ category.name|slugify }}"
+               class="link-btn">
+              View More →
+            </a>
+          </li>
+        {% empty %}
+          {# Fallback static cards if no categories in DB #}
+          <li class="category-card">
+            <div class="cat-img-wrap">
+              <img src="{% static 'nellore_maha_ruchulu_app/images/spices.png' %}" alt="Spice Powders" />
+            </div>
+            <h3>Spice Powders</h3>
+            <a href="{% url 'products' %}?category=spice-powders" class="link-btn">
+              View More →
+            </a>
+          </li>
+
+          <li class="category-card">
+            <div class="cat-img-wrap">
+              <img src="{% static 'nellore_maha_ruchulu_app/images/jar.png' %}" alt="Pickles" />
+            </div>
+            <h3>Pickles</h3>
+            <a href="{% url 'products' %}?category=pickles" class="link-btn">
+              View More →
+            </a>
+          </li>
+
+          <li class="category-card">
+            <div class="cat-img-wrap">
+              <img src="{% static 'nellore_maha_ruchulu_app/images/spices copy.png' %}" alt="Instant Mixes" />
+            </div>
+            <h3>Instant Mixes</h3>
+            <a href="{% url 'products' %}?category=instant-mixes" class="link-btn">
+              View More →
+            </a>
+          </li>
+
+          <li class="category-card">
+            <div class="cat-img-wrap">
+              <img src="{% static 'nellore_maha_ruchulu_app/images/Rectangle 2 (3).png' %}" alt="Laddus" />
+            </div>
+            <h3>Laddus</h3>
+            <a href="{% url 'products' %}?category=laddus" class="link-btn">
+              View More →
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <!-- STORY SECTION -->
+  <section class="story">
+    <div class="story-inner">
+      <div class="story-image-wrap">
+        {% if story_image %}
+          <img src="{{ story_image.url }}" alt="Spice mix" />
+        {% else %}
+          <img src="{% static 'nellore_maha_ruchulu_app/images/Rectangle 3.png' %}" alt="Spice mix" />
+        {% endif %}
+      </div>
+
+      <div class="story-text">
+        <h2>{{ story_title|default:"The Taste of Tradition, Straight from Nellore" }}</h2>
+
+        <div class="story-paragraphs">
+          <p>
+            {{ story_paragraph_1|default:"At Nellore Maharuchulu, every spoonful brings you the authentic taste of Andhra’s rich culinary heritage. Handcrafted in small batches, our spice powders, pickles, and sweets are made using time-tested recipes passed down for generations." }}
+          </p>
+
+          <p>
+            {{ story_paragraph_2|default:"We don’t just sell products, we share family secrets. From our kitchen to yours, each laddu, each masala blend, and every jar of pickle is made using traditional methods and carefully sourced ingredients. No preservatives. No shortcuts. Just the original, time-honored taste." }}
+          </p>                                                                          
+        </div>
+
+        <a href="{% url 'about' %}" class="story-cta">Know More →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- BEST SELLERS -->
+  <section class="bestsellers">
+    <div class="container">           
+<div class="section-heading text-center">
+  <h2>{{ home.bestseller_title|default:"Our Best Sellers" }}</h2>
+  <p>{{ home.bestseller_subtitle|default:"Tried, loved, and reordered. Here are the top picks our customers can’t get enough of." }}</p>
+</div>
+
+      <ul class="product-list" aria-label="Best sellers">
+        {% for product in best_sellers %}
+          <li class="product-card">
+            <div class="product-img-wrap">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" />
+              {% else %}
+                <img src="{% static 'nellore_ma_ruchulu_app/images/Rectangle 4.png' %}"
+                     alt="{{ product.name }}" />
+              {% endif %}
+            </div>
+
+            <div class="title-price-row">
+              <h3 class="product-title">{{ product.name }}</h3>
+              <p class="price">₹{{ product.price_per_kg }}<span class="price-unit" >/kg</span></p>
+            </div>
+
+            <!-- WhatsApp order link -->
+            <a href="https://wa.me/{{ product.whatsapp_number|default:'9618500442' }}?text={{ 'I want to buy this product'|urlencode }}"
+               class="btn whatsapp-btn"
+               target="_blank"
+               rel="noopener">
+              <img src="{% static 'nellore_maha_ruchulu_app/images/whatsapp.png' %}"
+                   class="wa-icon" alt="WhatsApp" />
+              Whatsapp to order
+            </a>
+          </li>
+        {% empty %}
+          <li class="product-card">
+            <div class="product-img-wrap">
+              <img src="{% static 'nellore_maha_ruchulu_app/images/Rectangle 4.png' %}" alt="Kaaram Podi" />
+            </div>
+            <div class="title-price-row">
+              <h3 class="product-title">Kaaram Podi</h3>
+              <p class="price">₹500<span class="price-unit">/kg</span></p>
+            </div>
+            <a href="https://wa.me/9618500442?text={{ 'I wanna buy this Kaaram Podi'|urlencode }}"
+               class="btn whatsapp-btn"
+               target="_blank"
+               rel="noopener">
+              <img src="{% static 'nellore_maha_ruchulu_app/images/whatsapp.png' %}" class="wa-icon" alt="WhatsApp" />
+              Whatsapp to order
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </section>
+
+  <!-- CTA SECTION -->
+  <section class="cta" style="background: #FFFCF5;">
+    <div class="container cta-inner">
+      <div class="cta-img-wrap">
+        {% if cta_image %}
+          <img src="{{ cta_image.url }}" alt="Products" />
+        {% else %}
+          <img src="{% static 'nellore_maha_ruchulu_app/images/top-view-condiments-frame-with-copy-space-Photoroom 1.png' %}"
+               alt="Products" />
+        {% endif %}
+      </div>
+
+      <div class="cta-text">
+        <h2>{{ cta_title|default:"Still Craving Home-style Goodness?" }}</h2>
+        <p>
+          {{ cta_text|default:"Discover our full range of spice powders, pickles, sweets, and instant mixes — all made with love in every batch." }}
+        </p>
+        <a href="{% url 'products' %}" class="btn primary-btn">
+          {{ cta_button_label|default:"View all Products →" }}
+        </a>
+      </div>
+    </div>
+  </section>
+
+{% endblock %}

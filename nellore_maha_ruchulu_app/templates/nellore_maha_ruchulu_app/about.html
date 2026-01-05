@@ -1,0 +1,117 @@
+{% extends "nellore_maha_ruchulu_app/base.html" %}
+{% load static %}
+
+{% block title %}About | Nellore Maharuchulu{% endblock %}
+
+{% block content %}
+
+<!-- TOP STRIP -->
+<section class="about-hero">
+  <div class="container about-hero-inner">
+    <h1>{{ about.hero_title|default:"About Nellore Maharuchulu" }}</h1>
+    <p>{{ about.hero_subtitle|default:"Bringing the flavors of Andhra’s kitchens to your home." }}</p>
+  </div>
+</section>
+
+<!-- STORY SECTION -->
+<section class="story" style="background-color: #FFFCF5;">
+  <div class="story-inner">
+    <div class="story-image-wrap">
+      {% if about and about.story_image %}
+        <img src="{{ about.story_image.url }}" alt="Spice mix" />
+      {% else %}
+        <img src="{% static 'nellore_maha_ruchulu_app/images/Rectangle 3.png' %}" alt="Spice mix" />
+      {% endif %}
+    </div>
+
+    <div class="story-text">
+      <h2>{{ about.story_heading|default:"Homemade Flavours, Straight from Nellore" }}</h2>
+
+      <div class="story-paragraphs">
+        <p>{{ about.story_paragraph_1|default:"What started in our family kitchen is now reaching homes across the country..." }}</p>
+        <p>{{ about.story_paragraph_2|default:"From sun-dried spice powders to oil-cured pickles..." }}</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- WHY CHOOSE US -->
+<section class="why-choose">
+  <div class="container">
+<div class="why-header">
+  <h2>{{ about.why_choose_title|default:"Why Choose Us" }}</h2>
+  <p>{{ about.why_choose_subtitle|default:"At Nellore Maharuchulu, we don’t just make food — we preserve tradition..." }}</p>
+</div>
+
+    <div class="why-grid">
+      {% if why_cards %}
+        {% for card in why_cards %}
+          <article class="why-card">
+            <div class="why-icon">
+              {% if card.icon %}
+                <img src="{{ card.icon.url }}" alt="{{ card.title }}" />
+              {% else %}
+                <img src="{% static 'nellore_maha_ruchulu_app/images/default-icon.png' %}" alt="{{ card.title }}" />
+              {% endif %}
+            </div>
+            <h3>{{ card.title }}</h3>
+            <p>{{ card.paragraph }}</p>
+          </article>
+        {% endfor %}
+      {% else %}
+        <!-- Static fallback if no cards in admin yet -->
+        <article class="why-card">
+          <div class="why-icon">
+            <img src="{% static 'nellore_maha_ruchulu_app/images/organic-maps-svgrepo-com 1.png' %}" alt="Homemade" />
+          </div>
+          <h3>100% Homemade</h3>
+          <p>All our products are made in small batches using traditional home-style methods — not factory-produced.</p>
+        </article>
+
+        <article class="why-card">
+          <div class="why-icon">
+            <img src="{% static 'nellore_maha_ruchulu_app/images/ingredients-svgrepo-com 1.png' %}" alt="Premium ingredients" />
+          </div>
+          <h3>Premium Local Ingredients</h3>
+          <p>We source ingredients from trusted local farmers and markets — nothing artificial, nothing industrial.</p>
+        </article>
+
+        <article class="why-card">
+          <div class="why-icon">
+            <img src="{% static 'nellore_maha_ruchulu_app/images/Group.png' %}" alt="No preservatives" />
+          </div>
+          <h3>No Preservatives or Additives</h3>
+          <p>Just pure ingredients, sun-dried and slow-cooked — no chemicals, no shortcuts, just the way our grandmothers made them.</p>
+        </article>
+
+        <article class="why-card">
+          <div class="why-icon">
+            <img src="{% static 'nellore_maha_ruchulu_app/images/authenticity-svgrepo-com 1.png' %}" alt="Authentic Andhra" />
+          </div>
+          <h3>Authentic Andhra Recipes</h3>
+          <p>Passed down through generations, our spice mixes and pickles carry the bold, signature taste of Nellore cuisine.</p>
+        </article>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta page-about-cta">
+  <div class="container cta-inner">
+
+    <div class="cta-img-wrap">
+      <img src="{% static 'nellore_maha_ruchulu_app/images/top-view-condiments-frame-with-copy-space-Photoroom 1.png' %}" alt="Products" />
+    </div>
+
+    <div class="cta-text">
+      <h2>{{ about.cta_title|default:"Ready to Taste the Tradition?" }}</h2>
+      <p>{{ about.cta_text|default:"Browse our handmade spice powders, pickles, laddus, and more — and order easily through WhatsApp." }}</p>
+      <a href="{{ about.cta_button_url|default:'/products/' }}" class="btn primary-btn">{{ about.cta_button_label|default:"View all Products →" }}</a>
+    </div>
+
+  </div>
+</section>
+
+{% endblock %}

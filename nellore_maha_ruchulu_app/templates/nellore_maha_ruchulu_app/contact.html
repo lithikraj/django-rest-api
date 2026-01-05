@@ -1,0 +1,109 @@
+{% extends "nellore_maha_ruchulu_app/base.html" %}
+{% load static %}
+
+{% block title %}Contact | Nellore Maharuchulu{% endblock %}
+
+{% block content %}
+
+<!-- TOP STRIP -->
+<section class="contact-hero">
+  <div class="container contact-hero-inner">
+    <h1>{{ contact.hero_title|default:"Contact Us" }}</h1>
+    <p>{{ contact.hero_subtitle|default:"We’d love to hear from you — whether it’s for orders, feedback, or questions about our products." }}</p>
+  </div>
+</section>
+
+<!-- MAIN CONTACT SECTION -->
+<section class="contact-main">
+  <div class="container">
+    <div class="contact-main-inner">
+
+      <!-- LEFT: text + contact info (no form) -->
+      <div class="contact-text">
+        <h2>{{ contact.intro_heading|default:"We’re Just a Message Away" }}</h2>
+
+        <div class="story-paragraphs">
+          <p>{{ contact.intro_paragraph|default:"From spicy powders to sweet laddus, we’re here to talk about it all. Have a query, need a custom pack, or want to share your experience? Message us on WhatsApp or call — our kitchen might be busy, but we always make time for our customers." }}</p>
+        </div>
+
+        <ul class="contact-list">
+          <li>
+            <img src="{% static 'nellore_maha_ruchulu_app/images/Vector (1).png' %}" alt="Phone" class="list-icon">
+            <a href="tel:{{ contact.contact_phone|default:'+918965756562' }}">{{ contact.contact_phone|default:"+91 89657 56562" }}</a>
+          </li>
+
+          <li>
+            <img src="{% static 'nellore_maha_ruchulu_app/images/Vector (2).png' %}" alt="Email" class="list-icon">
+            <a href="mailto:{{ contact.contact_email|default:'info@nelloremaharuchulu.com' }}">{{ contact.contact_email|default:"info@nelloremaharuchulu.com" }}</a>
+          </li>
+
+          <li>
+            <img src="{% static 'nellore_maha_ruchulu_app/images/Vector (3).png' %}" alt="Location" class="list-icon">
+            <span>{{ contact.contact_address|default:"Nellore, Andhra Pradesh" }}</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- RIGHT: image -->
+      <div class="contact-image-wrap">
+        {% if contact and contact.image %}
+          <img src="{{ contact.image.url }}" alt="Contact image" />
+        {% else %}
+          <img src="{% static 'nellore_maha_ruchulu_app/images/Rectangle 3.png' %}" alt="Spice mix" />
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BEST SELLERS -->
+<section class="bestsellers">
+  <div class="container">
+<div class="section-heading">
+  <h2>{{ contact.bestseller_title|default:"Our Best Sellers" }}</h2>
+  <p>{{ contact.bestseller_subtitle|default:"Tried, loved, and reordered — top picks customers can’t get enough of." }}</p>
+</div>
+
+    <ul class="product-list row row-cols-1 row-cols-sm-2 row-cols-md-4 g-3" aria-label="Best sellers">
+      {% for product in best_sellers %}
+        <li class="col product-card">
+          <div class="product-img-wrap">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}" />
+            {% else %}
+              <img src="{% static 'nellore_maha_ruchulu_app/images/Rectangle 4.png' %}" alt="{{ product.name }}" />
+            {% endif %}
+          </div>
+          <div class="title-price-row">
+            <h3 class="product-title">{{ product.name }}</h3>
+            <p class="price">₹{{ product.price_per_kg }}<span class="price-unit">/kg</span></p>
+          </div>
+          <a href="https://wa.me/{{ product.whatsapp_number|default:'9618500442' }}?text={{ product.get_whatsapp_message|urlencode }}"
+             class="btn whatsapp-btn" target="_blank" rel="noopener">
+            <img src="{% static 'nellore_maha_ruchulu_app/images/whatsapp.png' %}" class="wa-icon" alt="WhatsApp" />
+            Whatsapp to order
+          </a>
+        </li>
+      {% empty %}
+        <p>No best sellers yet. Add products in the admin.</p>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<!-- CTA (bottom) -->
+<section class="cta">
+  <div class="container cta-inner">
+    <div class="cta-img-wrap">
+      <img src="{% static 'nellore_maha_ruchulu_app/images/top-view-condiments-frame-with-copy-space-Photoroom 1.png' %}" alt="Products" />
+    </div>
+
+    <div class="cta-text">
+      <h2>{{ contact.cta_title|default:"Ready to Taste the Tradition?" }}</h2>
+      <p>{{ contact.cta_text|default:"Browse our handmade spice powders, pickles, laddus, and more — and order easily through WhatsApp." }}</p>
+      <a href="{{ contact.cta_button_url|default:'/products/' }}" class="btn primary-btn">{{ contact.cta_button_label|default:"View all Products →" }}</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
